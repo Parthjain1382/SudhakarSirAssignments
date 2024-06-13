@@ -106,27 +106,29 @@ class SecondViewController: UIViewController{
     
     //Data transfer Using the Submit Button
     @objc func dataTransfer(){
-        var tableSourceData = TableSourceData()
-        guard let empIdText = stdIdTxt.text, !empIdText.isEmpty,
-                     let empId = Int(empIdText),
-                     let name = nameTxt.text, !name.isEmpty,
-                     let image = imageView.image
-                else {
-                    showAction("Fill Details", "Please Fill all the text Field Properly")
-            return
-               }
-        
+        if (validateID() == true && validateName() == true ){
+            var tableSourceData = TableSourceData()
+            guard let empIdText = stdIdTxt.text, !empIdText.isEmpty,
+                  let empId = Int(empIdText),
+                  let name = nameTxt.text, !name.isEmpty,
+                  let image = imageView.image
+            else {
+                showAction("Fill Details", "Please Fill all the text Field Properly")
+                return
+            }
+            
             if let defaultImage = UIImage(named: "profile"),
-                    let defaultImageData = defaultImage.pngData(),
-                    let selectedImageData = image.pngData(),
-                    defaultImageData == selectedImageData {
-                    showAction("Select Image","Please Select an Image")
-                    return
-                }
-        
-        let newStudentData = DataStruct(stdId: empId, name: name, DOB: datePicker.date, image: image,gender: genderSelected)
-        tableSourceData.setData(newStudentData)
-        
+               let defaultImageData = defaultImage.pngData(),
+               let selectedImageData = image.pngData(),
+               defaultImageData == selectedImageData {
+                showAction("Select Image","Please Select an Image")
+                return
+            }
+            
+            let newStudentData = DataStruct(stdId: empId, name: name, DOB: datePicker.date, image: image,gender: genderSelected)
+            tableSourceData.setData(newStudentData)
+            showAction("Added Successfully", "New Student has been added succesfully")
+        }
     }
     
     //setting up the submit button
@@ -176,10 +178,6 @@ class SecondViewController: UIViewController{
          let nameCharacterSet = CharacterSet.letters.union(CharacterSet.whitespaces)
          if name.rangeOfCharacter(from: nameCharacterSet.inverted) != nil {
            showAction("Enter valid Credentials","Please enter a valid name (alphabetic characters only).")
-           return false
-         }
-         if name.count > 4 {
-           showAction("No. of characters","Name should be less than 4 characters.")
            return false
          }
          return true
